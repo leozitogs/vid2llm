@@ -57,8 +57,12 @@ classifiers = [
 # Runtime dependencies. Minimal core needed for the CLI to function.
 # Feature dependencies (cv, pyav, ocr, etc.) live under optional-dependencies.
 dependencies = [
+    # CLI framework. Type safe command parsing built on click.
     "typer>=0.15.0",
+    # Terminal rendering for progress, tables, and styled CLI output.
     "rich>=13.9.0",
+    # Core numerical array type used across the frame extraction contract.
+    "numpy>=2.0.0",
 ]
 
 [project.urls]
