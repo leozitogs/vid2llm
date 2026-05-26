@@ -1,0 +1,58 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto eol=lf
+
+# Source code
+*.py text eol=lf
+*.pyi text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+
+# Shell scripts always LF
+*.sh text eol=lf
+
+# Windows-specific files keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+
+# Video and media files (relevant for this project)
+*.mp4 binary
+*.mov binary
+*.avi binary
+*.mkv binary
+*.webm binary
+*.flv binary
+*.wmv binary
+*.m4v binary
+
+# Audio
+*.mp3 binary
+*.wav binary
+*.flac binary
+*.ogg binary
+
+# Compiled and archive
+*.so binary
+*.dylib binary
+*.dll binary
+*.zip binary
+*.tar.gz binary
+*.whl binary
+
+# Lock files: treat as text but never merge automatically
+uv.lock text -diff merge=binary
+*.lock text -diff

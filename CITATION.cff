@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: vid2llm
+abstract: "Turn any video into LLM-ready frames. Smart sampling, scene detection, OCR, and SDK-ready output for modern multimodal language models."
+authors:
+  - given-names: Leonardo
+    family-names: Gonçalves Sobral
+    affiliation: Leovox Studios
+repository-code: "https://github.com/leozitogs/vid2llm"
+license: Apache-2.0
+date-released: 2026-05-25
+version: 0.0.0
+keywords:
+  - video
+  - frame-extraction
+  - multimodal
+  - computer-vision
+  - python

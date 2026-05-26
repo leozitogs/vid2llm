@@ -1,0 +1,256 @@
+# vid2llm project configuration.
+# See https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+# Build backend: hatchling with hatch-vcs for git tag based versioning.
+
+[build-system]
+requires = ["hatchling>=1.27", "hatch-vcs>=0.4"]
+build-backend = "hatchling.build"
+
+# ---------------------------------------------------------------------------
+# Project metadata (PEP 621)
+# ---------------------------------------------------------------------------
+
+[project]
+name = "vid2llm"
+dynamic = ["version"]
+description = "Turn any video into LLM-ready frames. Smart sampling, scene detection, OCR, and SDK-ready output for modern multimodal language models."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+    { name = "Leonardo Gonçalves Sobral", email = "studiosleovox@gmail.com" },
+]
+maintainers = [
+    { name = "Leonardo Gonçalves Sobral", email = "studiosleovox@gmail.com" },
+]
+keywords = [
+    "video",
+    "llm",
+    "multimodal",
+    "frame-extraction",
+    "computer-vision",
+    "scene-detection",
+    "ocr",
+    "ai-agents",
+    "video-understanding",
+    "python",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+# Runtime dependencies. Empty in Phase 0. Feature dependencies arrive in later phases.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/leozitogs/vid2llm"
+Documentation = "https://github.com/leozitogs/vid2llm#readme"
+Repository = "https://github.com/leozitogs/vid2llm"
+Issues = "https://github.com/leozitogs/vid2llm/issues"
+Changelog = "https://github.com/leozitogs/vid2llm/blob/main/CHANGELOG.md"
+
+[project.scripts]
+vid2llm = "vid2llm.cli:app"
+
+# ---------------------------------------------------------------------------
+# Optional dependency groups (PEP 621 optional-dependencies)
+# Reserved for future phases. Each group activates a specific feature surface.
+# ---------------------------------------------------------------------------
+
+[project.optional-dependencies]
+cv = []
+pyav = []
+ocr = []
+detection = []
+providers = []
+all = []
+
+# ---------------------------------------------------------------------------
+# Dependency groups (PEP 735)
+# Used by `uv sync --group <name>` for local development.
+# ---------------------------------------------------------------------------
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.4",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.0",
+]
+test = [
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.0",
+]
+docs = []
+
+# ---------------------------------------------------------------------------
+# Hatch build configuration
+# ---------------------------------------------------------------------------
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/vid2llm/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vid2llm"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/vid2llm",
+    "tests",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "CHANGELOG.md",
+    "pyproject.toml",
+]
+
+# ---------------------------------------------------------------------------
+# Ruff: formatter and linter
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+extend-exclude = [
+    "src/vid2llm/_version.py",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "D",    # pydocstyle
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "C4",   # flake8-comprehensions
+    "RET",  # flake8-return
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "PTH",  # flake8-use-pathlib
+    "RUF",  # ruff-specific
+]
+ignore = [
+    "D203",  # one-blank-line-before-class (conflicts with D211)
+    "D213",  # multi-line-summary-second-line (conflicts with D212)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+"src/vid2llm/__init__.py" = ["D104"]
+"src/vid2llm/__main__.py" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["vid2llm"]
+
+# ---------------------------------------------------------------------------
+# Mypy: strict type checking
+# ---------------------------------------------------------------------------
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+disallow_untyped_decorators = true
+no_implicit_reexport = true
+show_error_codes = true
+show_column_numbers = true
+pretty = true
+files = ["src", "tests"]
+exclude = [
+    "src/vid2llm/_version.py",
+]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+# ---------------------------------------------------------------------------
+# Pytest configuration
+# ---------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--showlocals",
+    "--tb=short",
+    "--cov=vid2llm",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+]
+markers = [
+    "unit: fast tests that do not touch the file system or network",
+    "integration: slower tests that exercise the CLI or filesystem",
+    "slow: tests that take more than a second to run",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:importlib.*",
+]
+
+# ---------------------------------------------------------------------------
+# Coverage configuration
+# ---------------------------------------------------------------------------
+
+[tool.coverage.run]
+branch = true
+source = ["vid2llm"]
+omit = [
+    "src/vid2llm/_version.py",
+    "src/vid2llm/__main__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "\\.\\.\\.",
+]
+show_missing = true
+skip_covered = false
+precision = 1
+
+[tool.coverage.xml]
+output = "coverage.xml"
