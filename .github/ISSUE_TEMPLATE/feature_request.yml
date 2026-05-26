@@ -1,0 +1,49 @@
+name: Feature Request
+description: Suggest a new feature, capability, or improvement for vid2llm.
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion. Please describe the problem first and
+        the proposed solution second. Feature requests with a clear use
+        case are more likely to be accepted.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this feature solve? Who experiences it?
+      placeholder: |
+        When preparing video for the Anthropic SDK, I have to manually count
+        tokens and trim frames. There is no built-in way to enforce a budget.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like vid2llm to solve this?
+      placeholder: |
+        A `--max-tokens` flag that estimates token cost across selected
+        frames and drops the least informative ones until the budget fits.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you thought about and why you rejected them.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links to related issues, prior art, papers, or other relevant material.
+    validations:
+      required: false

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/leozitogs/vid2llm/discussions
+    about: Questions, ideas, and general conversation belong in Discussions.
+  - name: Security Vulnerabilities
+    url: https://github.com/leozitogs/vid2llm/security/advisories/new
+    about: Report security issues privately through GitHub Security Advisories.
