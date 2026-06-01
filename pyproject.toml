@@ -57,6 +57,8 @@ classifiers = [
 # Runtime dependencies. Minimal core needed for the CLI to function.
 # Feature dependencies (cv, pyav, ocr, etc.) live under optional-dependencies.
 dependencies = [
+    # Image encoding for frame serialization (jpg, png, webp).
+    "pillow>=10.0.0",
     # CLI framework. Type safe command parsing built on click.
     "typer>=0.15.0",
     # Terminal rendering for progress, tables, and styled CLI output.
@@ -180,6 +182,10 @@ ignore = [
 "tests/**/*.py" = ["D"]
 "src/vid2llm/__init__.py" = ["D104"]
 "src/vid2llm/__main__.py" = ["D"]
+# Backends declare NDArray at the top level; moving to TYPE_CHECKING requires backend modifications.
+"src/vid2llm/backends/*.py" = ["TC002"]
+# Typer's standard pattern requires Argument/Option calls in function default expressions.
+"src/vid2llm/cli.py" = ["B008"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

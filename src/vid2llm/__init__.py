@@ -17,6 +17,7 @@ from importlib.metadata import PackageNotFoundError, version
 
 from vid2llm.backends.base import FrameBackend
 from vid2llm.backends.ffmpeg import FFmpegBackend
+from vid2llm.core.extractor import extract_frames, extract_to_list
 from vid2llm.core.selector import list_available_backends, select_backend
 from vid2llm.core.types import (
     ColorSpace,
@@ -72,6 +73,8 @@ __all__ = [
     "Vid2LLMError",
     "VideoMetadata",
     "__version__",
+    "extract_frames",
+    "extract_to_list",
     "list_available_backends",
     "select_backend",
 ]

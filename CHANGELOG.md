@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Frame extraction orchestrator with streaming `extract_frames` and collecting `extract_to_list`.
+- Frame to disk serialization supporting jpg, png, and webp via Pillow.
+- Functional CLI with `extract` and `probe` commands.
+- Three pluggable backends (opencv, pyav, ffmpeg) with automatic selection.
+
 ### Changed
 
 ### Deprecated
