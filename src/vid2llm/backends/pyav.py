@@ -193,9 +193,7 @@ class PyAVBackend:
                         break
 
                     raw_array = frame.to_ndarray(format="rgb24")
-                    rgb_array: NDArray[np.uint8] = np.ascontiguousarray(
-                        raw_array, dtype=np.uint8
-                    )
+                    rgb_array: NDArray[np.uint8] = np.ascontiguousarray(raw_array, dtype=np.uint8)
                     frame_index_attr = getattr(frame, "index", None)
                     frame_index = (
                         frame_index_attr if frame_index_attr is not None else frame_counter - 1
