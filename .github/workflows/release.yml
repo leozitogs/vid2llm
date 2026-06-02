@@ -31,7 +31,7 @@ jobs:
       - name: Checkout repository
         # fetch-depth 0 is required so hatch-vcs can read the full tag history
         # and compute the correct version string via git describe.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
