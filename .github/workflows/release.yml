@@ -87,6 +87,11 @@ jobs:
       id-token: write
       contents: read
 
+    # Force Node 24 runtime to silence the Node 20 deprecation warning emitted
+    # by actions/download-artifact@v4 until the action ships a native v5.
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
     steps:
       - name: Download dist artifacts
         uses: actions/download-artifact@v4
