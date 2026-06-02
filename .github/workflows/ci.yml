@@ -1,0 +1,90 @@
+# Continuous integration: lint, type checks, and test matrix.
+# Runs on every push to main and on every pull request targeting main.
+#
+# Pin third-party actions to stable major tags.
+# SHA pinning is a future hardening option for supply-chain security.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint and type check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv and Python 3.13
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: "3.13"
+
+      # Install dev tools plus cv/pyav extras so mypy resolves all imports,
+      # including cv2, av, and pytest (used in tests/).
+      - name: Install dependencies
+        run: uv sync --extra cv --extra pyav --group dev --group test
+
+      - name: Run ruff lint
+        run: uv run ruff check src tests
+
+      - name: Run ruff format check
+        run: uv run ruff format --check src tests
+
+      - name: Run mypy
+        run: uv run mypy --strict src tests
+
+  test:
+    name: Test / ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS is intentionally omitted - deferred as tech debt to a later milestone.
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
+
+      - name: Set up uv and Python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+
+      # Install the test group and the cv/pyav extras so all three backends
+      # are exercised and the synthetic fixture can be generated.
+      - name: Install dependencies
+        run: uv sync --extra cv --extra pyav --group test
+
+      - name: Run test suite
+        run: uv run pytest
+
+      # Upload coverage only from the canonical job to avoid duplicate reports.
+      - name: Upload coverage to Codecov
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13' }}
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: false

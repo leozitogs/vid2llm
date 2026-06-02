@@ -1,0 +1,98 @@
+# Release flow:
+# 1. A tag push matching v* (or a manual trigger) builds the package once.
+# 2. The build artifact is published to TestPyPI automatically.
+# 3. After TestPyPI succeeds, the publish-pypi job waits for manual approval
+#    on the protected "pypi" environment before publishing to the real PyPI.
+#
+# Both publish steps use OIDC trusted publishing - no API tokens are stored.
+# The PO must configure the trusted publishers on PyPI/TestPyPI and the
+# protected environments in the repository settings before the first release.
+#
+# Pin third-party actions to stable major tags.
+# SHA pinning is a future hardening option for supply-chain security.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # fetch-depth 0 is required so hatch-vcs can read the full tag history
+        # and compute the correct version string via git describe.
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up uv and Python 3.13
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-testpypi:
+    name: Publish to TestPyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/vid2llm
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: publish-testpypi
+    runs-on: ubuntu-latest
+    # This environment is protected with a required reviewer so the job pauses
+    # here until the PO approves after validating the TestPyPI release.
+    environment:
+      name: pypi
+      url: https://pypi.org/p/vid2llm
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
