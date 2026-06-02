@@ -12,9 +12,6 @@ updates:
       time: "08:00"
       timezone: "America/Recife"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "python"
     groups:
       python-minor-and-patch:
         update-types:
@@ -32,9 +29,6 @@ updates:
       time: "08:00"
       timezone: "America/Recife"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "github-actions"
     groups:
       actions-minor-and-patch:
         update-types:
