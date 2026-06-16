@@ -14,7 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Functional CLI with `extract` and `probe` commands.
 - Three pluggable backends (opencv, pyav, ffmpeg) with automatic selection.
 
+## [0.1.1] - 2026-06-16
+
 ### Changed
+- Corrected the published package description and project metadata on PyPI to reflect the shipped v0.1.0 functionality.
 
 ### Deprecated
 
